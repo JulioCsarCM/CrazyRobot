@@ -1,3 +1,4 @@
+import 'package:app_test/home/APP_MOBILE/user.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/components/user_tile.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,12 @@ class UserList extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pushNamed(
                 AppRoutes.USER_FORM,
-                arguments: users,
+                arguments: const User(
+                  id: '',
+                  name: '',
+                  descricao: '',
+                  avatarUrl: '',
+                ),
               );
             },
           ),

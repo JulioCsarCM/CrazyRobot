@@ -21,13 +21,7 @@ class Users with ChangeNotifier {
   }
 
   void put(User user) {
-    if (user == null) {
-      return;
-    }
-
-    if (user.id.isEmpty &&
-        user.id.trim().isEmpty &&
-        _items.containsKey(user.id)) {
+    if (user.id.isNotEmpty && _items.containsKey(user.id)) {
       _items.update(
         user.id,
         (_) => User(

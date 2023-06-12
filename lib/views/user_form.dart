@@ -12,6 +12,7 @@ class UserForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)?.settings.arguments as User;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Produtos'),
@@ -26,7 +27,7 @@ class UserForm extends StatelessWidget {
 
                 Provider.of<Users>(context, listen: false).put(
                   User(
-                    id: _formData['descricao']!,
+                    id: user.id.isEmpty ? '' : user.id,
                     name: _formData['name']!,
                     descricao: _formData['descricao']!,
                     avatarUrl: _formData['avatarUrl']!,
@@ -39,34 +40,54 @@ class UserForm extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Form(
-          key: _form,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
           child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Nome'),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Nome inválido';
-                  }
+            children: [
+              user.avatarUrl.isEmpty
+                  ? const SizedBox()
+                  : CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(
+                        user.avatarUrl,
+                      ),
+                    ),
+              Form(
+                key: _form,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      initialValue: user.name.isEmpty ? null : user.name,
+                      decoration: const InputDecoration(labelText: 'Nome'),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Nome inválido';
+                        }
 
-                  if (value.trim().length < 3) {
-                    return 'Nome muito pequeno. No mínimo 3 letras.';
-                  }
+                        if (value.trim().length < 3) {
+                          return 'Nome muito pequeno. No mínimo 3 letras.';
+                        }
 
-                  return null;
-                },
-                onSaved: (value) => _formData['name'] = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Descrição'),
-                onSaved: (value) => _formData['Descrição'] = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'URL do Avatar'),
-                onSaved: (value) => _formData['avatarUrl'] = value!,
+                        return null;
+                      },
+                      onSaved: (value) => _formData['name'] = value!,
+                    ),
+                    TextFormField(
+                      initialValue:
+                          user.descricao.isEmpty ? null : user.descricao,
+                      decoration: const InputDecoration(labelText: 'Descrição'),
+                      onSaved: (value) => _formData['descricao'] = value!,
+                    ),
+                    TextFormField(
+                      initialValue:
+                          user.avatarUrl.isEmpty ? null : user.avatarUrl,
+                      decoration:
+                          const InputDecoration(labelText: 'URL do Avatar'),
+                      onSaved: (value) => _formData['avatarUrl'] = value!,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
